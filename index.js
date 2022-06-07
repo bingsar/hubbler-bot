@@ -6,6 +6,7 @@ const cors = require('cors')
 require('dotenv').config();
 const { Telegraf, Markup, session, Scenes, Composer} = require('telegraf')
 const text = require('./const')
+const path = require('path');
 
 
 const { BOT_TOKEN } = process.env;
@@ -39,6 +40,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.options('/api/get/users', function(req, res, next){
     res.header('Access-Control-Allow-Origin', "*");
@@ -140,7 +143,12 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
     // })
 })
 
-app.listen(process.env.PORT)
+
+const server = app.listen(process.env.PORT || 5000, () => {
+    const port = server.address().port;
+    console.log(`Express is working on port ${port}`);
+});
+// app.listen(process.env.PORT)
 
 
 bot.start(async (ctx) => {
