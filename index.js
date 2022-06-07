@@ -137,8 +137,8 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
     // })
 })
 
-app.listen(3001, () => {
-    console.log('running nodemon')
+app.listen(process.env.PORT | PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })
 
 
