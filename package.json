@@ -19,6 +19,7 @@
     "dev": "nodemon index.js"
   },
   "engines": {
-    "node": "v17.1.0"
+    "node": "v17.1.0",
+    "yarn": "v1.22.19"
   }
 }
