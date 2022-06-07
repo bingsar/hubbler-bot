@@ -3,11 +3,14 @@ const app = express()
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
 const cors = require('cors')
+require('dotenv').config();
 const { Telegraf, Markup, session, Scenes, Composer} = require('telegraf')
 const text = require('./const')
-const {end} = require("server/reply");
 
-const bot = new Telegraf('5305598864:AAEjyRDw4DFR07breCDxRFdulAmttc7AJ0M')
+
+const { BOT_TOKEN } = process.env;
+
+const bot = new Telegraf( BOT_TOKEN )
 
 const categoryList = new Composer()
 const choseSubCategory = new Composer()
