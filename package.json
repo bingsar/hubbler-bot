@@ -1,8 +1,9 @@
 {
-  "name": "server",
+  "name": "hubbler",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "description": "Easy job connector",
+  "author": "bingsar",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
