@@ -1,5 +1,5 @@
 const express = require('express')
-const wakeUpDyno = require("wokeDyno.js");
+const wakeUpDyno = require('./wokeDyno.js')
 const app = express()
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
@@ -146,16 +146,21 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
     // })
 })
 
-const server = app.listen(process.env.PORT || 5000, () => {
-    const port = server.address().port;
-    wakeUpDyno(DYNO_URL);
-    console.log(`Express is working on port ${port}`);
+const server = app.listen(process.env.PORT || 3001, () => {
+    const port = server.address().port
+    wakeUpDyno(DYNO_URL)
+    console.log(`Express is working on port ${port}`)
 });
 
+
+
+// BOT GOES FROM HERE
+
+
 bot.start(async (ctx) => {
-    await ctx.replyWithHTML(`Ответь на несколько вопросов и приложи своё резюме или портфолио.\r\n\r\nМы начнём подбирать для тебя подходящие вакантные позиции, как только получим твою заявку.\r\n\r\n`,
+    await ctx.replyWithHTML(`1️⃣ Ответь на несколько вопросов.\r\n\r\n2️⃣ Прикрепи своё резюме в PDF или ссылку на портфолио.\r\n\r\n3️⃣ И мы сразу начнем искать для тебя работу.\r\n\r\n`,
         Markup.inlineKeyboard([
-            [Markup.button.callback('Отправить заявку', 'start_quiz')],
+            [Markup.button.callback('✏️ Отправить резюме', 'start_quiz')],
             [Markup.button.callback('Меню', 'button_menu')]
         ])
     )
@@ -164,19 +169,14 @@ bot.start(async (ctx) => {
 bot.action('button_menu', async (ctx) => {
     await ctx.deleteMessage()
     await ctx.replyWithHTML('<i>Меню</i>', Markup.inlineKeyboard([
-        [Markup.button.callback('Отправить заявку', 'start_quiz')],
-        [Markup.button.callback('О Hubbler', 'about'), Markup.button.callback('Сообщения', 'messages')]
+        [Markup.button.callback('✏️ Отправить резюме', 'start_quiz')],
+        [Markup.button.callback('📡 О Hubbler', 'about'), Markup.button.callback('✉️ Сообщения', 'messages')]
     ]))
 })
 
 bot.action('about', async (ctx) => {
     await ctx.deleteMessage()
-    await ctx.replyWithHTML(`\r\n\r\n<b>Hubbler</b> - это рекрутинговая команда высококлассных профессионалов в области IT и дизайна. Опыт, инсайдерское знание отрасли и сообщества позволяют нам объединять таланты с компаниями, нуждающимися в кадрах и реализации проектов.`, Markup.inlineKeyboard([
-        [Markup.button.callback('Узнать больше', 'link_to_website')],
-
-        [Markup.button.callback('⬅ Назад', 'button_menu')]
-
-    ]))
+    await ctx.replyWithAnimation({source: './gifs/about.mp4'}, {caption: `\r\n\r\n<b>Hubbler</b> рекрутинговая команда высококлассных профессионалов в области IT и Дизайна. Опыт, глубокое знание отрасли и работа с комьюнити позволяет нам быстро находить таланты 🔥 \r\n\r\nФилософия Hubbler — люди это самое важное! Наша миссия — помогать талантливым русскоязычным специалистам из индустрии IT находить самую лучшую работу в мире ✌🏼\r\n\r\n🪐 Для идей и предложений — info@hubbler.world`, parse_mode: 'HTML', ...Markup.inlineKeyboard([[Markup.button.callback('Узнать больше', 'link_to_website')],[Markup.button.callback('⬅ Назад', 'button_menu')]])})
 })
 
 bot.action('messages', async (ctx) => {
@@ -229,7 +229,7 @@ categoryList.action('start_quiz', async (ctx) => {
         ctx.wizard.state.data.first_name = ctx.from.first_name
         ctx.wizard.state.data.last_name = ctx.from.last_name
 
-        await ctx.replyWithHTML('<b>Какая специализация вас интересует?</b>', Markup.inlineKeyboard(
+        await ctx.replyWithHTML('<b>Выберите вашу специальность</b>', Markup.inlineKeyboard(
             [
                 [Markup.button.callback('Data Science & Analytics', 'data_science')],
                 [Markup.button.callback('Design & Creative', 'design')],
@@ -1397,7 +1397,7 @@ quizEdit.action('editCategory', async (ctx) => {
     ctx.wizard.state.data.whatEditing = 'category'
     console.log('edit_on_category - ' + ctx.wizard.cursor)
     try {
-        await ctx.replyWithHTML('<b>Какая специализация вас интересует?</b>', Markup.inlineKeyboard(
+        await ctx.replyWithHTML('<b>Выберите вашу специальность</b>', Markup.inlineKeyboard(
             [
                 [Markup.button.callback('Data Science & Analytics', 'data_science')],
                 [Markup.button.callback('Design & Creative', 'design')],
@@ -1683,12 +1683,12 @@ quizSendData.action('sendData', async (ctx) => {
             console.log(result);
             console.log(field);
         });
-        await ctx.replyWithHTML('<b>Данные успешно отправлены!</b>')
+        await ctx.replyWithVideo({source: './gifs/sended.mov'}, {caption: `<b>Hubbler</b> получил твое резюме!\r\nИ уже начал искать для тебя идеальную работу ❤️\r\n\r\n<i>Меню</i>`, parse_mode: 'HTML', ...Markup.inlineKeyboard([
+                [Markup.button.callback('✏️ Отправить резюме', 'start_quiz')],
+                [Markup.button.callback('📡 О Hubbler', 'about'), Markup.button.callback('✉️ Сообщения', 'messages')]
+            ])
+        })
         ctx.wizard.state.data = {}
-        await ctx.replyWithHTML('<i>Меню</i>', Markup.inlineKeyboard([
-            [Markup.button.callback('Отправить заявку', 'start_quiz')],
-            [Markup.button.callback('О Hubbler', 'about'), Markup.button.callback('Сообщения', 'messages')]
-        ]))
     } catch (e) {
         console.error(e)
     }

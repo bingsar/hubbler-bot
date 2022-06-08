@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = import('node-fetch')
 
 const wakeUpDyno = (url, interval = 25, callback) => {
     const milliseconds = interval * 60000;
