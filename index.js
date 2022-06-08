@@ -215,7 +215,13 @@ bot.action('messages', async (ctx) => {
     }
 })
 
-bot.help((ctx) => ctx.reply(text.commands))
+bot.help(async (ctx) => {
+    await ctx.deleteMessage()
+    await ctx.replyWithHTML('<i>Меню</i>', Markup.inlineKeyboard([
+        [Markup.button.callback('✏️ Отправить резюме', 'start_quiz')],
+        [Markup.button.callback('📡 О Hubbler', 'about'), Markup.button.callback('✉️ Сообщения', 'messages')]
+    ]))
+})
 
 categoryList.action('start_quiz', async (ctx) => {
     await ctx.deleteMessage()
