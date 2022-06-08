@@ -143,13 +143,10 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
     // })
 })
 
-
 const server = app.listen(process.env.PORT || 5000, () => {
     const port = server.address().port;
     console.log(`Express is working on port ${port}`);
 });
-// app.listen(process.env.PORT)
-
 
 bot.start(async (ctx) => {
     await ctx.replyWithHTML(`Ответь на несколько вопросов и приложи своё резюме или портфолио.\r\n\r\nМы начнём подбирать для тебя подходящие вакантные позиции, как только получим твою заявку.\r\n\r\n`,
