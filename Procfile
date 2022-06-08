@@ -1,2 +1,2 @@
 web: yarn start
-worker: yarn --version
+web: yarn --version

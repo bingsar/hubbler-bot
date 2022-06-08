@@ -9,6 +9,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "mysql": "^2.18.1",
+    "node-fetch": "^3.2.5",
     "nodemon": "^2.0.16",
     "server": "^1.0.37",
     "telegraf": "^4.8.3"

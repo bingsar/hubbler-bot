@@ -1,4 +1,5 @@
 const express = require('express')
+const wakeUpDyno = require("wokeDyno.js");
 const app = express()
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
@@ -36,6 +37,8 @@ let db = mysql.createPool({
 });
 
 app.use(cors())
+
+const DYNO_URL = "https://hubbler-bot.herokuapp.com/";
 
 app.use(express.json())
 
@@ -145,6 +148,7 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
 
 const server = app.listen(process.env.PORT || 5000, () => {
     const port = server.address().port;
+    wakeUpDyno(DYNO_URL);
     console.log(`Express is working on port ${port}`);
 });
 
