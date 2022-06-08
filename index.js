@@ -429,7 +429,7 @@ quizFio.action('custom_category', async (ctx) => {
 
 quizFio.on('text', async (ctx) => {
     await ctx.deleteMessage()
-    await ctx.deleteMessage(ctx.message.message_id-1)
+    
     ctx.wizard.state.data = {}
     ctx.wizard.state.data.username = ctx.from.username
     ctx.wizard.state.data.first_name = ctx.from.first_name
@@ -482,7 +482,7 @@ quizFio.action(/sub_+/,async (ctx) => {
 
 quizEmail.on('text', async (ctx) => {
     await ctx.deleteMessage()
-    ctx.deleteMessage(ctx.message.message_id-1)
+    
     ctx.wizard.state.data.chatId = ctx.message.chat.id
 
     console.log('enterEmail - ' + ctx.wizard.cursor)
@@ -611,7 +611,7 @@ quizPhone.action('backToEdits', async (ctx) => {
 
 quizLocation.on('text', async (ctx) => {
     await ctx.deleteMessage()
-    ctx.deleteMessage(ctx.message.message_id-1)
+    
     console.log('enterLocation_text - ' + ctx.wizard.cursor)
     console.log('message - ' + ctx.message.text)
 
@@ -783,7 +783,7 @@ quizReadyRelocate.action('back_on_location', async (ctx) => {
 
 quizReadyRelocate.on('text', async (ctx) => {
     await ctx.deleteMessage()
-    ctx.deleteMessage(ctx.message.message_id-1)
+    
     console.log('quizReadyRelocate - ' + ctx.wizard.cursor)
 
     ctx.wizard.state.data.quizLocation = ctx.message.text
@@ -945,7 +945,7 @@ quizAbout.action('back_on_file', async (ctx) => {
 
 quizAbout.on('text', async (ctx) => {
     await ctx.deleteMessage()
-    ctx.deleteMessage(ctx.message.message_id-1)
+    
     console.log('quizAbout_text - ' + ctx.wizard.cursor)
     ctx.wizard.state.data.quizResume = ctx.message.text
     try {
@@ -992,7 +992,7 @@ quizAbout.on('document', async (ctx) => {
 
     try {
         if (fileUploaded.mime_type !== 'application/pdf' && ctx.wizard.state.data.quizCV === 'cv_pdf') {
-            await ctx.deleteMessage(ctx.message.message_id-1)
+            
             await ctx.replyWithHTML('<b>Загрузите резюме в формате .pdf</b>', Markup.inlineKeyboard([
                 [Markup.button.callback('⬅ Назад', 'back_on_about')]
             ]))
@@ -1000,7 +1000,7 @@ quizAbout.on('document', async (ctx) => {
         }
 
         if (ctx.wizard.state.data.quizCV === 'cv_link') {
-            await ctx.deleteMessage(ctx.message.message_id-1)
+            
             await ctx.replyWithHTML('<b>Вы выбрали метод загрузки Резюме по ссылке</b>', Markup.inlineKeyboard([
                 [Markup.button.callback('⬅ Вернуться к выбору метода', 'back_on_about')]
             ]))
@@ -1163,7 +1163,7 @@ quizGetFile.on('document', async (ctx) => {
 
     try {
         if (fileUploaded.mime_type !== 'application/pdf' && ctx.wizard.state.data.quizCV === 'cv_pdf') {
-            await ctx.deleteMessage(ctx.message.message_id-1)
+            
             await ctx.replyWithHTML('<b>Загрузите резюме в формате .pdf</b>', Markup.inlineKeyboard([
                 [Markup.button.callback('⬅ Назад', 'back_on_about')]
             ]))
@@ -1171,7 +1171,7 @@ quizGetFile.on('document', async (ctx) => {
         }
 
         if (ctx.wizard.state.data.quizCV === 'cv_link') {
-            await ctx.deleteMessage(ctx.message.message_id-1)
+            
             await ctx.replyWithHTML('<b>Вы выбрали метод загрузки Резюме по ссылке</b>', Markup.inlineKeyboard([
                 [Markup.button.callback('⬅ Вернуться к выбору метода', 'back_on_about')]
             ]))
@@ -1224,7 +1224,7 @@ quizGetFile.on('document', async (ctx) => {
 
 quizGetFile.on('text', async (ctx) => {
     await ctx.deleteMessage()
-    ctx.deleteMessage(ctx.message.message_id-1)
+    
     console.log('quizGetFile_text - ' + ctx.wizard.cursor)
     let contact
 
