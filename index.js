@@ -1,5 +1,4 @@
 const express = require('express')
-const wakeUpDyno = require('./wokeDyno.js')
 const app = express()
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
@@ -8,6 +7,7 @@ require('dotenv').config();
 const { Telegraf, Markup, session, Scenes, Composer} = require('telegraf')
 const text = require('./const')
 const path = require('path');
+const { AwakeHeroku } = require("awake-heroku");
 
 
 const { BOT_TOKEN } = process.env;
@@ -37,8 +37,6 @@ let db = mysql.createPool({
 });
 
 app.use(cors())
-
-const DYNO_URL = "https://hubbler-bot.herokuapp.com/";
 
 app.use(express.json())
 
@@ -148,10 +146,14 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
 
 const server = app.listen(process.env.PORT || 3001, () => {
     const port = server.address().port
-    wakeUpDyno(DYNO_URL)
     console.log(`Express is working on port ${port}`)
 });
 
+
+AwakeHeroku.add("https://hubbler-bot.herokuapp.com/");
+
+// Start service
+AwakeHeroku.start();
 
 
 // BOT GOES FROM HERE
