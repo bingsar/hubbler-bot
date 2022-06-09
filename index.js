@@ -178,7 +178,7 @@ bot.action('button_menu', async (ctx) => {
 
 bot.action('about', async (ctx) => {
     await ctx.deleteMessage()
-    await ctx.replyWithAnimation({source: './gifs/about.mp4'}, {caption: `\r\n\r\n<b>Hubbler</b> рекрутинговая команда высококлассных профессионалов в области IT и Дизайна. Опыт, глубокое знание отрасли и работа с комьюнити позволяет нам быстро находить таланты 🔥 \r\n\r\nФилософия Hubbler — люди это самое важное! Наша миссия — помогать талантливым русскоязычным специалистам из индустрии IT находить самую лучшую работу в мире ✌🏼\r\n\r\n🪐 Для идей и предложений — info@hubbler.world`, parse_mode: 'HTML', ...Markup.inlineKeyboard([[Markup.button.callback('Узнать больше', 'link_to_website')],[Markup.button.callback('⬅ Назад', 'button_menu')]])})
+    await ctx.replyWithAnimation({source: './gifs/about.mp4'}, {caption: `\r\n\r\nHubbler - это рекрутинговая команда высококлассных профессионалов в области IT и Дизайна. Опыт, глубокое знание индустрии и работа с комьюнити позволяют нам объединять таланты и ведущие компании отрасли 🔥 \r\n\r\nФилософия Hubbler — люди это самое важное! Наша миссия — помогать талантливым русскоязычным специалистам из индустрии IT находить самую лучшую работу в мире ✌🏼\r\n\r\n🪐 Для идей и предложений — info@hubbler.world`, parse_mode: 'HTML', ...Markup.inlineKeyboard([[Markup.button.callback('Узнать больше', 'link_to_website')],[Markup.button.callback('⬅ Назад', 'button_menu')]])})
 })
 
 bot.action('messages', async (ctx) => {
@@ -237,7 +237,7 @@ categoryList.action('start_quiz', async (ctx) => {
         ctx.wizard.state.data.first_name = ctx.from.first_name
         ctx.wizard.state.data.last_name = ctx.from.last_name
 
-        await ctx.replyWithHTML('<b>Выберите вашу специальность</b>', Markup.inlineKeyboard(
+        await ctx.replyWithHTML('<b>Выбери категорию</b>', Markup.inlineKeyboard(
             [
                 [Markup.button.callback('Data Science & Analytics', 'data_science')],
                 [Markup.button.callback('Design & Creative', 'design')],
@@ -417,7 +417,7 @@ choseSubCategory.action('software', async (ctx) => {
 quizFio.action('custom_category', async (ctx) => {
     await ctx.deleteMessage()
     console.log('action_sendCategory - ' + ctx.wizard.cursor)
-    await ctx.replyWithHTML('Ведите вашу специальность', Markup.inlineKeyboard([
+    await ctx.replyWithHTML('<b>Выбери специализацию</b>', Markup.inlineKeyboard([
         [ctx.wizard.state.data.whatEditing === 'category' ? Markup.button.callback('⬅ Назад', `backToEdits`) : Markup.button.callback('⬅ Назад', `start_quiz`)]
     ]))
     if (ctx.wizard.state.data.whatEditing === 'category') {
@@ -1405,7 +1405,7 @@ quizEdit.action('editCategory', async (ctx) => {
     ctx.wizard.state.data.whatEditing = 'category'
     console.log('edit_on_category - ' + ctx.wizard.cursor)
     try {
-        await ctx.replyWithHTML('<b>Выберите вашу специальность</b>', Markup.inlineKeyboard(
+        await ctx.replyWithHTML('<b>Выбери категорию</b>', Markup.inlineKeyboard(
             [
                 [Markup.button.callback('Data Science & Analytics', 'data_science')],
                 [Markup.button.callback('Design & Creative', 'design')],
@@ -1544,7 +1544,7 @@ quizEdit.action(/sub_+/, async (ctx) => {
 
 quizEdit.action('custom_category', async (ctx) => {
     console.log('action_sendCategory - ' + ctx.wizard.cursor)
-    await ctx.replyWithHTML('Ведите вашу специальность', Markup.inlineKeyboard([
+    await ctx.replyWithHTML('<b>Выбери специализацию</b>', Markup.inlineKeyboard([
         [Markup.button.callback('⬅ Назад', `editCategory`)]
     ]))
     await ctx.wizard.selectStep(11)
