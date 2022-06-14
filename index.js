@@ -1752,6 +1752,9 @@ quizSendData.action('sendData', async (ctx) => {
         let host = path[0]
         let pathname = path[1]
 
+        console.log(host)
+        console.log(pathname)
+
         const mailData = {
             to: 'cv@hubbler.world',
             from: 'cv@hubbler.world',
