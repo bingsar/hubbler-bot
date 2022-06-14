@@ -8,6 +8,8 @@ const { Telegraf, Markup, session, Scenes, Composer} = require('telegraf')
 const text = require('./const')
 const path = require('path');
 const { AwakeHeroku } = require("awake-heroku");
+const nodemailer = require("nodemailer");
+const res = require("express/lib/response");
 
 const { BOT_TOKEN } = process.env;
 
@@ -282,7 +284,7 @@ choseSubCategory.action('edits', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -616,7 +618,7 @@ quizPhone.action('backToEdits', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -671,7 +673,7 @@ quizLocation.on('text', async (ctx) => {
             await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
             await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
             await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
             await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
             await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
                 [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -768,7 +770,7 @@ quizLocation.action('on_edits_user_yes', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -874,7 +876,7 @@ quizFile.action('backToEdits', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -983,7 +985,7 @@ quizAbout.on('text', async (ctx) => {
             await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
             await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
             await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
             await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
             await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
                 [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1063,7 +1065,7 @@ quizAbout.on('document', async (ctx) => {
             await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
             await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
             await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
             await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
             await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
                 [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1136,7 +1138,7 @@ quizGetFile.action('forward_on_about', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1238,7 +1240,7 @@ quizGetFile.on('document', async (ctx) => {
             await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
             await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
             await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+            await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
             await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
             await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
                 [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1287,7 +1289,7 @@ quizGetFile.on('text', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1328,7 +1330,7 @@ quizSendData.action('forward_on_about', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1379,7 +1381,7 @@ quizEdit.action('back_send_data', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1558,7 +1560,7 @@ quizEdit.action(/sub_+/, async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1595,7 +1597,7 @@ quizEdit.on('text', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1617,7 +1619,7 @@ quizBackOnEdits.action('backToEdits', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1650,7 +1652,7 @@ quizBackOnEdits.on('text', async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1679,7 +1681,7 @@ quizBackOnEdits.action(/relocate_+/, async (ctx) => {
         await ctx.replyWithHTML(`<b>Специализация: </b>${ctx.wizard.state.data.subcategoryText}\r\n`)
         await ctx.replyWithHTML(`<b>Местоположение: </b>${ctx.wizard.state.data.quizLocation}\r\n`)
         await ctx.replyWithHTML(`<b>Готовы к переезду?: </b>${ctx.wizard.state.data.quizReadyRelocate}\r\n`)
-        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizResumeFileName}\r\n`)
+        await ctx.replyWithHTML(`<b>Резюме или Портфолио: </b>${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : ctx.wizard.state.data.quizResumeFileName}\r\n`)
         await ctx.replyWithHTML(`<b>О себе: </b>${ctx.wizard.state.data.quizAbout}\r\n`)
         await ctx.replyWithHTML(`<b>Подтвердите отправку</b>`, Markup.inlineKeyboard([
             [Markup.button.callback('Завершить и отправить', 'sendData')],
@@ -1699,6 +1701,13 @@ quizSendData.action('sendData', async (ctx) => {
     console.log('quizSendData - ' + ctx.wizard.cursor)
     await ctx.deleteMessage()
     console.log(ctx.wizard.state.data)
+    let resume
+    if (ctx.wizard.state.data.quizCV === 'cv_link') {
+        resume = ctx.wizard.state.data.quizResume
+    } else {
+        resume = ctx.wizard.state.data.quizResumeFileName
+    }
+
     try {
         let query="INSERT INTO users(chat_id, telegram_first_name, telegram_last_name, telegram_id, chosen_category, name, contact, location, relocation, cv_type, cv ,about) VALUES (?)";
         let values = [
@@ -1712,7 +1721,7 @@ quizSendData.action('sendData', async (ctx) => {
             encodeURI(ctx.wizard.state.data.quizLocation),
             encodeURI(ctx.wizard.state.data.quizReadyRelocate),
             encodeURI(ctx.wizard.state.data.quizCV),
-            encodeURI(ctx.wizard.state.data.quizResume),
+            encodeURI(resume),
             encodeURI(ctx.wizard.state.data.quizAbout),
         ]
         await db.query(query, ([values]), (err, result, field) => {
@@ -1725,6 +1734,54 @@ quizSendData.action('sendData', async (ctx) => {
                 [Markup.button.callback('📡 О Hubbler', 'about'), Markup.button.callback('✉️ Сообщения', 'messages')]
             ])
         })
+
+
+        //EMAIL
+
+        const transporter = await nodemailer.createTransport({
+            port: 465,
+            host: "smtp.gmail.com",
+            auth: {
+                user: 'cv@hubbler.world',
+                pass: 'mnqbustggaovsyko',
+            },
+            secure: true,
+        });
+
+        let path = ctx.wizard.state.data.quizResume.split(':')
+        let host = path[0]
+        let pathname = path[1]
+
+        const mailData = {
+            to: 'cv@hubbler.world',
+            from: 'cv@hubbler.world',
+            subject: 'New CV',
+            attachments: [{
+                filename: `${ctx.wizard.state.data.quizResumeFileName}`,
+                path: `${ctx.wizard.state.data.quizResume}`
+            }],
+            html: `<h1>New contact from HUBBLER bot</h1>
+               <p>Chat ID: ${ctx.wizard.state.data.chatId}</p>
+               <p>First Name: ${ctx.wizard.state.data.first_name}</p>
+               <p>Last Name: ${ctx.wizard.state.data.last_name}</p>
+               <p>Telegram Username: ${ctx.wizard.state.data.username}</p>
+               <p>Специализация: ${ctx.wizard.state.data.subcategory}</p>
+               <p>Контакт: ${ctx.wizard.state.data.contact}</p>
+               <p>Локация: ${ctx.wizard.state.data.quizLocation}</p>
+               <p>Готов к переезду: ${ctx.wizard.state.data.quizReadyRelocate}</p>
+               <p>Тип Резюме: ${ctx.wizard.state.data.quizCV}</p>
+               <p>Резюме: ${ctx.wizard.state.data.quizCV === 'cv_link' ? host + ':' + pathname: 'in Attachment'}</p>
+               <p>О себе: ${ctx.wizard.state.data.quizAbout}</p>
+                `,
+        }
+
+        await transporter.sendMail(mailData, function (err, info) {
+            if(err)
+                console.log(err)
+            else
+                console.log(info);
+        })
+
         ctx.wizard.state.data = {}
     } catch (e) {
         console.error(e)
