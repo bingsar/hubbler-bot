@@ -83,6 +83,25 @@ app.delete('/api/delete/messages/:messageId', (req, res) => {
     }
 })
 
+
+app.delete('/api/delete/user/:id', (req, res) => {
+    const id = req.params.id
+    if(id) {
+        try {
+            const deleteMessage = "DELETE FROM users WHERE id = (?)"
+
+            db.query(deleteMessage, id, (err, result) => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        } catch (e) {
+            console.error(e)
+        }
+
+    }
+})
+
 app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
     const telegramId = req.params.telegramId
     const chatId = req.params.chatId
