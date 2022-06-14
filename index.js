@@ -1749,13 +1749,8 @@ quizSendData.action('sendData', async (ctx) => {
 
         let path = ctx.wizard.state.data.quizResume.split(':')
         let host = path[0]
-        let pathname = path[1].split('/')
-        let name = pathname[2]
+        let pathname = path[1]
 
-
-        console.log(host)
-        console.log(pathname)
-        console.log(name)
 
         const mailData = {
             to: 'cv@hubbler.world',
@@ -1775,7 +1770,7 @@ quizSendData.action('sendData', async (ctx) => {
                <p>Локация: ${ctx.wizard.state.data.quizLocation}</p>
                <p>Готов к переезду: ${ctx.wizard.state.data.quizReadyRelocate}</p>
                <p>Тип Резюме: ${ctx.wizard.state.data.quizCV}</p>
-               <p>Резюме: ${ctx.wizard.state.data.quizCV === 'cv_link' ? host + '://' + name: 'in Attachment'}</p>
+               <p>Резюме: ${ctx.wizard.state.data.quizCV === 'cv_link' ? host + ':' + pathname : 'in Attachment'}</p>
                <p>О себе: ${ctx.wizard.state.data.quizAbout}</p>
                 `,
         }
