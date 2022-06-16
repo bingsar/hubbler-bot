@@ -197,7 +197,7 @@ bot.action('button_menu', async (ctx) => {
 
 bot.action('about', async (ctx) => {
     await ctx.deleteMessage()
-    await ctx.replyWithAnimation({source: './gifs/about.mp4'}, {caption: `\r\n\r\nHubbler - это рекрутинговая команда высококлассных профессионалов в области IT и Дизайна. Опыт, глубокое знание индустрии и работа с комьюнити позволяют нам объединять таланты и ведущие компании отрасли 🔥 \r\n\r\nФилософия Hubbler — люди это самое важное! Наша миссия — помогать талантливым русскоязычным специалистам из индустрии IT находить самую лучшую работу в мире ✌🏼\r\n\r\n🪐 Для идей и предложений — info@hubbler.world`, parse_mode: 'HTML', ...Markup.inlineKeyboard([[Markup.button.callback('Узнать больше', 'link_to_website')],[Markup.button.callback('⬅ Назад', 'button_menu')]])})
+    await ctx.replyWithAnimation({source: './gifs/about.mp4'}, {caption: `\r\n\r\nHubbler — это рекрутинговая команда высококлассных профессионалов в области IT и Дизайна. Опыт, глубокое знание индустрии и работа с комьюнити позволяют нам объединять таланты и ведущие компании отрасли 🔥 \r\n\r\nФилософия Hubbler — люди это самое важное! Наша миссия — помогать талантливым русскоязычным специалистам из индустрии IT находить самую лучшую работу в мире ✌🏼\r\n\r\n🪐 Для идей и предложений — cv@hubbler.world`, parse_mode: 'HTML', ...Markup.inlineKeyboard([[Markup.button.callback('Узнать больше', 'link_to_website')],[Markup.button.callback('⬅ Назад', 'button_menu')]])})
 })
 
 bot.action('messages', async (ctx) => {
@@ -1747,16 +1747,37 @@ quizSendData.action('sendData', async (ctx) => {
             secure: true,
         });
 
+        let mailData
 
-        const mailData = {
-            to: 'cv@hubbler.world',
-            from: 'cv@hubbler.world',
-            subject: 'New CV',
-            attachments: [{
-                filename: `${ctx.wizard.state.data.quizResumeFileName}`,
-                path: `${ctx.wizard.state.data.quizResume}`
-            }],
-            html: `<h1>New contact from HUBBLER bot</h1>
+        if (ctx.wizard.state.data.quizCV === 'cv_link') {
+            mailData = {
+                to: 'cv@hubbler.world',
+                    from: 'cv@hubbler.world',
+                    subject: 'New CV',
+                    html: `<h1>New contact from HUBBLER bot</h1>
+               <p>Chat ID: ${ctx.wizard.state.data.chatId}</p>
+               <p>First Name: ${ctx.wizard.state.data.first_name}</p>
+               <p>Last Name: ${ctx.wizard.state.data.last_name}</p>
+               <p>Telegram Username: ${ctx.wizard.state.data.username}</p>
+               <p>Специализация: ${ctx.wizard.state.data.subcategory}</p>
+               <p>Контакт: ${ctx.wizard.state.data.contact}</p>
+               <p>Локация: ${ctx.wizard.state.data.quizLocation}</p>
+               <p>Готов к переезду: ${ctx.wizard.state.data.quizReadyRelocate}</p>
+               <p>Тип Резюме: ${ctx.wizard.state.data.quizCV}</p>
+               <p>Резюме: ${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : 'in Attachment'}</p>
+               <p>О себе: ${ctx.wizard.state.data.quizAbout}</p>
+                `
+            }
+        } else {
+            mailData = {
+                to: 'cv@hubbler.world',
+                from: 'cv@hubbler.world',
+                subject: 'New CV',
+                attachments: [{
+                    filename: `${ctx.wizard.state.data.quizResumeFileName}`,
+                    path: `${ctx.wizard.state.data.quizResume}`
+                }],
+                html: `<h1>New contact from HUBBLER bot</h1>
                <p>Chat ID: ${ctx.wizard.state.data.chatId}</p>
                <p>First Name: ${ctx.wizard.state.data.first_name}</p>
                <p>Last Name: ${ctx.wizard.state.data.last_name}</p>
@@ -1769,7 +1790,9 @@ quizSendData.action('sendData', async (ctx) => {
                <p>Резюме: ${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : 'in Attachment'}</p>
                <p>О себе: ${ctx.wizard.state.data.quizAbout}</p>
                 `,
+            }
         }
+
 
         await transporter.sendMail(mailData, function (err, info) {
             if(err)
