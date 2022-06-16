@@ -1764,7 +1764,7 @@ quizSendData.action('sendData', async (ctx) => {
                <p>Локация: ${ctx.wizard.state.data.quizLocation}</p>
                <p>Готов к переезду: ${ctx.wizard.state.data.quizReadyRelocate}</p>
                <p>Тип Резюме: ${ctx.wizard.state.data.quizCV}</p>
-               <p>Резюме: ${ctx.wizard.state.data.quizCV === 'cv_link' ? ctx.wizard.state.data.quizResume : 'in Attachment'}</p>
+               <p>Резюме: ${ctx.wizard.state.data.quizResume}</p>
                <p>О себе: ${ctx.wizard.state.data.quizAbout}</p>
                 `
             }
