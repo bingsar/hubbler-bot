@@ -1752,8 +1752,8 @@ quizSendData.action('sendData', async (ctx) => {
         if (ctx.wizard.state.data.quizCV === 'cv_link') {
             mailData = {
                 to: 'cv@hubbler.world',
-                    from: 'cv@hubbler.world',
-                    subject: 'New CV',
+                from: 'bot@hubbler.world',
+                subject: `от ${ctx.wizard.state.data.first_name} ${ctx.wizard.state.data.last_name}`,
                     html: `<h1>New contact from HUBBLER bot</h1>
                <p>Chat ID: ${ctx.wizard.state.data.chatId}</p>
                <p>First Name: ${ctx.wizard.state.data.first_name}</p>
@@ -1771,8 +1771,8 @@ quizSendData.action('sendData', async (ctx) => {
         } else {
             mailData = {
                 to: 'cv@hubbler.world',
-                from: 'cv@hubbler.world',
-                subject: 'New CV',
+                from: 'bot@hubbler.world',
+                subject: `от ${ctx.wizard.state.data.first_name} ${ctx.wizard.state.data.last_name}`,
                 attachments: [{
                     filename: `${ctx.wizard.state.data.quizResumeFileName}`,
                     path: `${ctx.wizard.state.data.quizResume}`
