@@ -121,46 +121,6 @@ app.post('/api/send/message/:telegramId/:chatId/:message', async (req, res) => {
     ]
 
     db.query(insertMessageApply, ([values]))
-
-    // bot.telegram.sendMessage(chatId, message, Markup.inlineKeyboard([
-    //     [Markup.button.callback('Принять', 'invitation_apply')],
-    //     [Markup.button.callback('Отклонить', 'invitation_decline')]
-    // ]))
-    //
-    // bot.action('invitation_apply', async (ctx) => {
-    //
-    //     let insertMessageApply = "INSERT INTO messages(telegram_id, chat_id, message, accepted) VALUES (?)"
-    //     let values = [
-    //         encodeURI(telegramId),
-    //         encodeURI(chatId),
-    //         encodeURI(message),
-    //         1
-    //     ]
-    //
-    //     db.query(insertMessageApply, ([values]))
-    //
-    //     await ctx.replyWithHTML('Вы подтвердили отклик', Markup.inlineKeyboard([
-    //         [Markup.button.callback('Меню', 'button_menu')]
-    //     ]))
-    //
-    //
-    // })
-    //
-    // bot.action('invitation_decline', async (ctx) => {
-    //     let insertMessageDecline = "INSERT INTO messages(telegram_id, chat_id, message, accepted) VALUES (?)"
-    //     let values = [
-    //         encodeURI(telegramId),
-    //         encodeURI(chatId),
-    //         encodeURI(message),
-    //         0
-    //     ]
-    //
-    //     db.query(insertMessageDecline, ([values]));
-    //
-    //     await ctx.replyWithHTML('Вы отклонили приглашение', Markup.inlineKeyboard([
-    //         [Markup.button.callback('Меню', 'button_menu')]
-    //     ]))
-    // })
 })
 
 const server = app.listen(process.env.PORT || 3001, () => {
@@ -237,7 +197,6 @@ bot.action('messages', async (ctx) => {
 })
 
 bot.help(async (ctx) => {
-    await ctx.deleteMessage()
     await ctx.replyWithHTML('<i>Меню</i>', Markup.inlineKeyboard([
         [Markup.button.callback('✏️ Отправить резюме', 'start_quiz')],
         [Markup.button.callback('📡 О Hubbler', 'about'), Markup.button.callback('✉️ Сообщения', 'messages')]
