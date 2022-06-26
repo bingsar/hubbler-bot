@@ -148,7 +148,6 @@ bot.start(async (ctx) => {
 })
 
 bot.action('button_menu', async (ctx) => {
-    await ctx.deleteMessage()
     await ctx.replyWithHTML('<i>Меню</i>', Markup.inlineKeyboard([
         [Markup.button.callback('✏️ Отправить резюме', 'start_quiz')],
         [Markup.button.callback('📡 О Hubbler', 'about'), Markup.button.callback('✉️ Сообщения', 'messages')]
@@ -156,12 +155,10 @@ bot.action('button_menu', async (ctx) => {
 })
 
 bot.action('about', async (ctx) => {
-    await ctx.deleteMessage()
     await ctx.replyWithAnimation({source: './gifs/about.mp4'}, {caption: `\r\n\r\nHubbler — это рекрутинговая команда высококлассных профессионалов в области IT и Дизайна. Опыт, глубокое знание индустрии и работа с комьюнити позволяют нам объединять таланты и ведущие компании отрасли 🔥 \r\n\r\nФилософия Hubbler — люди это самое важное! Наша миссия — помогать талантливым русскоязычным специалистам из индустрии IT находить самую лучшую работу в мире ✌🏼\r\n\r\n🪐 Для идей и предложений — cv@hubbler.world`, parse_mode: 'HTML', ...Markup.inlineKeyboard([[Markup.button.callback('⬅ Назад', 'button_menu')]])})
 })
 
 bot.action('messages', async (ctx) => {
-    await ctx.deleteMessage()
     let username = ctx.from.username
     let selectMessagesForUsername = "SELECT * FROM messages WHERE telegram_id = (?) AND accepted = true"
 
