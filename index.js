@@ -1692,14 +1692,14 @@ quizSendData.action('sendData', async (ctx) => {
 
 
         //EMAIL
-        const { GMAIL_PASSWORD } = process.env;
+
 
         const transporter = await nodemailer.createTransport({
             port: 465,
             host: "smtp.gmail.com",
             auth: {
                 user: 'cv@hubbler.world',
-                pass: `${GMAIL_PASSWORD}`,
+                pass: 'fyf8BPB-kgc1bgz8mrx',
             },
             secure: true,
         });
