@@ -1694,8 +1694,6 @@ quizSendData.action('sendData', async (ctx) => {
         //EMAIL
         const { GMAIL_PASSWORD } = process.env;
 
-        console.log(GMAIL_PASSWORD)
-
         const transporter = await nodemailer.createTransport({
             port: 465,
             host: "smtp.gmail.com",
