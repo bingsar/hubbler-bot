@@ -1699,7 +1699,7 @@ quizSendData.action('sendData', async (ctx) => {
             host: "smtp.gmail.com",
             auth: {
                 user: 'cv@hubbler.world',
-                pass: GMAIL_PASSWORD,
+                pass: `${GMAIL_PASSWORD}`
             },
             secure: true,
         });
