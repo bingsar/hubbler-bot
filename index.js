@@ -11,7 +11,6 @@ const nodemailer = require("nodemailer");
 
 
 const { BOT_TOKEN } = process.env;
-const { GMAIL_PASSWORD } = process.env;
 
 const bot = new Telegraf( BOT_TOKEN )
 
@@ -1693,13 +1692,13 @@ quizSendData.action('sendData', async (ctx) => {
 
 
         //EMAIL
-
+        const { GMAIL_PASSWORD } = process.env;
         const transporter = await nodemailer.createTransport({
             port: 465,
             host: "smtp.gmail.com",
             auth: {
                 user: 'cv@hubbler.world',
-                pass: `${GMAIL_PASSWORD}`
+                pass: GMAIL_PASSWORD
             },
             secure: true,
         });
