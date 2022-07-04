@@ -162,17 +162,6 @@ bot.action('messages', async (ctx) => {
     let username = ctx.from.username
     let selectMessagesForUsername = "SELECT * FROM messages WHERE telegram_id = (?) AND accepted = true"
 
-    try {
-        db.query(selectMessagesForUsername, username, (err, result) => {
-            if (result.length !== 0) {
-                ctx.replyWithHTML(`Количество сообщений: ${result.length}`, Markup.inlineKeyboard([
-                    [Markup.button.callback('⬅ Назад', 'button_menu')]
-                ]))
-            }
-        })
-    } catch (e) {
-        console.error(e)
-    }
 
     try {
         db.query(selectMessagesForUsername, username, (err, result) => {
