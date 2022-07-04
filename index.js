@@ -179,6 +179,12 @@ bot.action('messages', async (ctx) => {
                         [Markup.button.callback('⬅ Назад', 'button_menu')]
                     ]))
                 }
+            } else {
+                ctx.replyWithHTML('Нет новых сообщений и уведомлений.', Markup.inlineKeyboard([
+                    [Markup.button.callback('Отправь нам свою заявку', 'start_quiz')],
+
+                    [Markup.button.callback('⬅ Назад', 'button_menu')]
+                ]))
             }
         })
     } catch (e) {
