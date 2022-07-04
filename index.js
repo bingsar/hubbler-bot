@@ -176,16 +176,20 @@ bot.action('messages', async (ctx) => {
 
     try {
         db.query(selectMessagesForUsername, username, (err, result) => {
-            if (result.length !== 0) {
-                result.map((value) => {
-                    ctx.replyWithHTML(`${decodeURI(value.message)}`)
-                })
-            } else {
-                ctx.replyWithHTML('Нет новых сообщений и уведомлений.', Markup.inlineKeyboard([
-                    [Markup.button.callback('Отправь нам свою заявку', 'start_quiz')],
+            if (result) {
+                if (result.length !== 0) {
+                    result.map((value) => {
+                        ctx.replyWithHTML(`${decodeURI(value.message)}`, Markup.inlineKeyboard([
+                            [Markup.button.callback('⬅ Назад', 'button_menu')]
+                        ]))
+                    })
+                } else {
+                    ctx.replyWithHTML('Нет новых сообщений и уведомлений.', Markup.inlineKeyboard([
+                        [Markup.button.callback('Отправь нам свою заявку', 'start_quiz')],
 
-                    [Markup.button.callback('⬅ Назад', 'button_menu')]
-                ]))
+                        [Markup.button.callback('⬅ Назад', 'button_menu')]
+                    ]))
+                }
             }
         })
     } catch (e) {
